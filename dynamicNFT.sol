@@ -66,6 +66,27 @@ contract DynamicNFT{
 
         emit MintToken(to, tokenId, URI);
         tokenIdCounter++;
+        
         return  tokenId;
     }
+
+        // LEVELING UP
+//Verify Ownership: Ensure only the owner of the token can level it up.
+// Increment Level: Increase the token's level by 1.
+// Update Metadata: Adjust the metadata (tokenURI) to reflect the updated level.
+    function levelUp(uint tokenId)public{
+        require(msg.sender == TokenOwner[tokenId],"Not token Owner");
+        TokenLevel[tokenId]++;
+
+        string memory newURI = string(abi.encodePacked(baseURI, uint2str(tokenId), "LEVEL : ", uint2str(TokenLevel[tokenId])));
+
+        TokenURI[tokenId] = newURI;
+    }
+
+    function getTokenLevel(uint tokenId)public view returns (uint){
+        require(bytes(TokenURI[tokenId]).length != 0,"No such token");
+        return TokenLevel[tokenId];
+    }
+
+
 }
